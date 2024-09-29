@@ -1,11 +1,8 @@
-name: depe
+name: DEPE
 description: "A new Flutter project."
-
-
 
 environment:
   sdk: ^3.5.2
-
 
 dependencies:
   material_color_utilities: ^0.12.0
@@ -14,24 +11,19 @@ dependencies:
     sdk: flutter
   google_fonts: ^6.2.1
   font_awesome_flutter: ^10.0.0
-
-
-
   cupertino_icons: ^1.0.8
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-
   flutter_lints: ^4.0.0
 
 dependency_overrides:
   material_color_utilities: ^0.12.0
   meta: ^1.16.0
 
-
 flutter:
-
-  
   uses-material-design: true
+  assets:
+    - assets/Malla.png
