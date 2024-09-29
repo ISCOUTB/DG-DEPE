@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
- // Asegúrate de que el archivo dashboard.dart esté en el mismo directorio
+import 'dashboard.dart'; // Asegúrate de que el archivo dashboard.dart esté en el mismo directorio
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
