@@ -11,9 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'PROJECT DEPE',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primarySwatch: Colors.pink,
+        scaffoldBackgroundColor: const Color(0xFFFFF5BA), // Cambia el color de fondo a #fff5ba
         useMaterial3: true,
       ),
       home: const LoginScreen(), // Usa la pantalla de login importada
