@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MallaCurricularScreen extends StatefulWidget {
+class MallaCurricularScreen extends StatefulWidget {a
   const MallaCurricularScreen({super.key});
 
   @override
@@ -22,18 +23,17 @@ class _MallaCurricularScreenState extends State<MallaCurricularScreen> {
 
   // Cargar las posiciones guardadas desde shared_preferences
   Future<void> _loadSavedPositions() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<String>? savedPositions = prefs.getStringList('posicionesDeX');
-  setState(() {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? savedPositions = prefs.getStringList('posicionesDeX');
     if (savedPositions != null) {
-      posicionesDeX = savedPositions.map((pos) {
-        List<String> coords = pos.split(',');
-        return Offset(double.parse(coords[0].replaceAll('(', '')), double.parse(coords[1].replaceAll(')', '')));
-      }).toList();
+      setState(() {
+        posicionesDeX = savedPositions.map((pos) {
+          List<String> coords = pos.split(',');
+          return Offset(double.parse(coords[0]), double.parse(coords[1]));
+        }).toList();
+      });
     }
-  });
-}
-  
+  }
 
   // Guardar las posiciones en shared_preferences
   Future<void> _savePositions() async {
@@ -91,7 +91,7 @@ class _MallaCurricularScreenState extends State<MallaCurricularScreen> {
                     size: 30,
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),
@@ -111,7 +111,7 @@ class Dashboard extends StatelessWidget {
           // Menú lateral
           Container(
             width: 220,
-            color: Colors.purple[900],
+            color: Colors.purple[400],
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -122,11 +122,11 @@ class Dashboard extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 // Opciones del menú
-                _menuItem(icon: FontAwesomeIcons.tachometerAlt, label: 'Dashboard', context: context),
+                _menuItem(icon: FontAwesomeIcons.gaugeHigh, label: 'Dashboard', context: context),
                 _menuItem(icon: FontAwesomeIcons.book, label: 'Malla Curricular', context: context),
                 _menuItem(icon: FontAwesomeIcons.graduationCap, label: 'Notas', context: context),
                 _menuItem(icon: FontAwesomeIcons.folderOpen, label: 'Cursos', context: context),
-                _menuItem(icon: FontAwesomeIcons.signOutAlt, label: 'Logout', context: context),
+                _menuItem(icon: FontAwesomeIcons.rightFromBracket, label: 'Logout', context: context),
               ],
             ),
           ),
@@ -161,6 +161,7 @@ class Dashboard extends StatelessWidget {
                     children: [
                       _dashboardCard(icon: FontAwesomeIcons.file, label: 'Ver Archivos', color: const Color.fromARGB(255, 123, 31, 162)),
                       _dashboardCard(icon: FontAwesomeIcons.upload, label: 'Subir Archivo', color: const Color.fromARGB(255, 59, 150, 64)),
+                      // ignore: deprecated_member_use
                       _dashboardCard(icon: FontAwesomeIcons.infoCircle, label: 'Ver Info', color: const Color.fromARGB(255, 245, 124, 0)),
                     ],
                   ),
@@ -222,7 +223,7 @@ class Dashboard extends StatelessWidget {
                     onTap: () {
                       // Aquí puedes agregar la lógica que quieras
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: const Text('¡Interacción exitosa!')),
+                        const SnackBar(content: Text('¡Interacción exitosa!')),
                       );
                     },
                     child: Container(
@@ -248,53 +249,57 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  // Widgets de Menú
-  Widget _menuItem({required IconData icon, required String label, required BuildContext context}) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.white),
-      title: Text(label, style: const TextStyle(color: Colors.white, fontSize: 16)),
-      onTap: () {
-        // Lógica para navegar entre pantallas
-        switch (label) {
-          case 'Malla Curricular':
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MallaCurricularScreen()));
-            break;
-          case 'Notas':
-            Navigator.push(context, MaterialPageRoute(builder: (context) => NotasScreen()));
-            break;
-          case 'Cursos':
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CursosScreen()));
-            break;
-          case 'Logout':
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Confirmación'),
-                  content: const Text('¿Estás seguro de que deseas cerrar sesión?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Cierra el diálogo
-                      },
-                      child: const Text('Cancelar'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Lógica de logout aquí
-                        Navigator.of(context).pop(); // Cierra el diálogo
-                      },
-                      child: const Text('Logout'),
-                    ),
-                  ],
-                );
-              },
-            );
-            break;
-        }
-      },
-    );
-  }
+// Widgets de Menú
+Widget _menuItem({required IconData icon, required String label, required BuildContext context}) {
+  return ListTile(
+    leading: Icon(icon, color: Colors.white),
+    title: Text(label, style: const TextStyle(color: Colors.white, fontSize: 16)),
+    onTap: () {
+      // Lógica para navegar entre pantallas
+      switch (label) {
+        case 'Malla Curricular':
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const MallaCurricularScreen()));
+          break;
+        case 'Notas':
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const NotasScreen()));
+          break;
+        case 'Cursos':
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CursosScreen()));
+          break;
+        case 'Logout':
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Confirmación'),
+                content: const Text('¿Estás seguro de que deseas cerrar sesión?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Cierra el diálogo
+                    },
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Redirige a la pantalla de login después del logout
+                      Navigator.of(context).pop(); // Cierra el diálogo
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      );
+                    },
+                    child: const Text('Logout'),
+                  ),
+                ],
+              );
+            },
+          );
+          break;
+      }
+    },
+  );
+}
 
   // Widget para las tarjetas del Dashboard
   Widget _dashboardCard({required IconData icon, required String label, required Color color}) {
@@ -355,6 +360,7 @@ class NotasScreen extends StatefulWidget {
   const NotasScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _NotasScreenState createState() => _NotasScreenState();
 }
 
@@ -363,13 +369,16 @@ class _NotasScreenState extends State<NotasScreen> {
   final List<TextEditingController> _porcentajeControllers = [];
   double _resultado = 0;
 
-  void _agregarNota() {
-    // Añadir nuevos controladores de texto para la nueva fila
-    _notaControllers.add(TextEditingController());
-    _porcentajeControllers.add(TextEditingController());
-    setState(() {}); // Actualizar la interfaz
+void _agregarNota() {
+    if (_notaControllers.length < 3) {
+      setState(() {
+        _notaControllers.add(TextEditingController());
+        _porcentajeControllers.add(TextEditingController());
+      });
+    }
   }
 
+  // Método para calcular la nota final
   void _calcularNota() {
     double totalNotas = 0;
     double totalPorcentajes = 0;
@@ -386,77 +395,199 @@ class _NotasScreenState extends State<NotasScreen> {
     setState(() {
       _resultado = totalPorcentajes > 0 ? totalNotas / (totalPorcentajes / 100) : 0;
     });
+    // Lógica para mostrar mensaje de felicitación o fracaso
+    if (_resultado >= 3) {
+      _mostrarMensaje(context, '¡Felicidades!', 'Has aprobado el curso con una nota de ${_resultado.toStringAsFixed(2)}.');
+    } else {
+      _mostrarMensaje(context, 'Lo siento', 'No has logrado aprobar el curso. Tu nota final es ${_resultado.toStringAsFixed(2)}.');
+    }
+  }
+
+   // Método para mostrar un diálogo con un mensaje
+  void _mostrarMensaje(BuildContext context, String titulo, String mensaje) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(titulo),
+          content: Text(mensaje),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFFF5BA), // Cambia el color de fondo a #fff5ba
       appBar: AppBar(
         title: const Text('Cálculo de Notas'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            // Botón para agregar un nuevo campo de nota y porcentaje
-            ElevatedButton(
-              onPressed: _agregarNota,
-              child: const Text('Agregar Nota y Porcentaje'),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
+      body: Center( // Centra el contenido en el medio de la pantalla
+        child: Container(
+          width: 320, // Ajuste para un tamaño compacto
+          padding: const EdgeInsets.all(20.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 3,
+                blurRadius: 5,
+                offset: const Offset(0, 3), // Cambia la posición de la sombra
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Botón para agregar una nueva nota (límite de 3)
+              ElevatedButton(
+                onPressed: _agregarNota,
+                child: const Text('Agregar Nota y Porcentaje'),
+              ),
+              const SizedBox(height: 20),
+              // Muestra el formulario de notas y porcentajes
+              ListView.builder(
+                shrinkWrap: true,
                 itemCount: _notaControllers.length,
                 itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _notaControllers[index],
-                          decoration: const InputDecoration(
-                            labelText: 'Nota',
-                            border: OutlineInputBorder(),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Campo de texto para la nota
+                        SizedBox(
+                          width: 100, // Tamaño más compacto
+                          child: TextField(
+                            controller: _notaControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Nota',
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                            ),
+                            keyboardType: TextInputType.number,
                           ),
-                          keyboardType: TextInputType.number,
                         ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: TextField(
-                          controller: _porcentajeControllers[index],
-                          decoration: const InputDecoration(
-                            labelText: 'Porcentaje',
-                            border: OutlineInputBorder(),
+                        const SizedBox(width: 10),
+                        // Campo de texto para el porcentaje
+                        SizedBox(
+                          width: 100, // Tamaño más compacto
+                          child: TextField(
+                            controller: _porcentajeControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Porcentaje',
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                            ),
+                            keyboardType: TextInputType.number,
                           ),
-                          keyboardType: TextInputType.number,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 },
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _calcularNota,
-              child: const Text('Calcular Nota Final'),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Resultado: ${_resultado.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 24),
-            ),
-          ],
+              const SizedBox(height: 20),
+              // Botón para calcular la nota final
+              ElevatedButton(
+                onPressed: _calcularNota,
+                child: const Text('Calcular Nota Final'),
+              ),
+              const SizedBox(height: 20),
+              // Muestra el resultado final
+              Text(
+                'Resultado: ${_resultado.toStringAsFixed(2)}',
+                style: const TextStyle(fontSize: 24),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-
 // Pantalla de Cursos
+class Curso {
+  final String nombre;
+  final String descripcion;
+  final String profesor;
+  final String correo;
+  final String textoGuia;
+
+  Curso({
+    required this.nombre,
+    required this.descripcion,
+    required this.profesor,
+    required this.correo,
+    required this.textoGuia,
+  });
+}
+
 class CursosScreen extends StatelessWidget {
-  const CursosScreen({super.key});
+  CursosScreen({super.key});
+
+  // Lista de cursos
+  final List<Curso> cursos = [
+    Curso(
+      nombre: 'Programación Orientada a Objetos',
+      descripcion: 'Este curso se enfoca en el paradigma de programación orientada a objetos.',
+      profesor: 'Juan Pérez',
+      correo: 'juan.perez@universidad.edu',
+      textoGuia: 'Apuntes de POO',
+    ),
+    Curso(
+      nombre: 'Desarrollo de Software',
+      descripcion: 'El curso aborda las metodologías y técnicas en el desarrollo de software.',
+      profesor: 'María López',
+      correo: 'maria.lopez@universidad.edu',
+      textoGuia: 'Manual de Desarrollo Ágil',
+    ),
+  ];
+
+  // Función para mostrar el diálogo con la información del curso
+  void _mostrarInformacionCurso(BuildContext context, Curso curso) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(curso.nombre),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Descripción: ${curso.descripcion}'),
+              const SizedBox(height: 10),
+              Text('Profesor: ${curso.profesor}'),
+              const SizedBox(height: 10),
+              Text('Correo: ${curso.correo}'),
+              const SizedBox(height: 10),
+              Text('Texto Guía: ${curso.textoGuia}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -464,9 +595,15 @@ class CursosScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Cursos'),
       ),
-      body: const Center(
-        child: Text('Aquí van los cursos disponibles',
-            style: TextStyle(fontSize: 24)),
+      body: ListView.builder(
+        itemCount: cursos.length,
+        itemBuilder: (context, index) {
+          final curso = cursos[index];
+          return ListTile(
+            title: Text(curso.nombre),
+            onTap: () => _mostrarInformacionCurso(context, curso),
+          );
+        },
       ),
     );
   }
