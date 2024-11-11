@@ -1,64 +1,82 @@
 import 'package:flutter/material.dart';
 import 'dashboard.dart'; // Asegúrate de que el archivo dashboard.dart esté en el mismo directorio
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoginButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Escucha cambios en los campos para habilitar o deshabilitar el botón de login
+    _usernameController.addListener(_validateInputs);
+    _passwordController.addListener(_validateInputs);
+  }
+
+  void _validateInputs() {
+    setState(() {
+      // Habilita el botón solo si ambos campos tienen texto
+      _isLoginButtonEnabled = _usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+    });
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          // Sección izquierda (Texto de bienvenida centrado, fondo claro)
-          Expanded(
-            child: Container(
-              color: const Color.fromRGBO(255, 245, 186, 1), // Fondo claro para la sección izquierda
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'DE ESTUDIANTES PARA ESTUDIANTES',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'El lugar para compartir experiencias y conocimiento',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+      body: Container(
+        color: const Color.fromRGBO(255, 245, 186, 1),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'DE ESTUDIANTES PARA ESTUDIANTES',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-            ),
-          ),
-          
-          // Sección derecha (Formulario de Login)
-          Expanded(
-            child: Container(
-              color: const Color.fromRGBO(255, 245, 186, 1), // Fondo para la pantalla derecha
-              padding: const EdgeInsets.all(20.0),
-              child: Center( // Centra el formulario verticalmente
-                child: Container(
-                  width: 500, // Aumenta el tamaño del recuadro
-                  padding: const EdgeInsets.all(50.0), // Aumenta el padding interno
+                const SizedBox(height: 10),
+                const Text(
+                  'El lugar para compartir experiencias y conocimiento',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
-                    color: Colors.white, // Fondo blanco para el recuadro
-                    borderRadius: BorderRadius.circular(10), // Bordes redondeados
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: Colors.grey, // Color del borde
-                      width: 2, // Grosor del borde
+                      color: Colors.grey,
+                      width: 2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5), // Sombra del recuadro
+                        color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(0, 5),
@@ -66,14 +84,12 @@ class LoginScreen extends StatelessWidget {
                     ],
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min, // Hace que el tamaño de la columna sea lo más pequeño posible
                     children: [
                       const Text(
                         'Login',
                         style: TextStyle(
-                          fontSize: 35, // Tamaño de texto adecuado para un recuadro más grande
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -82,12 +98,13 @@ class LoginScreen extends StatelessWidget {
                       const Text(
                         'Detalles de tu cuenta',
                         style: TextStyle(
-                          fontSize: 14, // Tamaño de texto más pequeño
+                          fontSize: 14,
                           color: Colors.black,
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextField(
+                        controller: _usernameController,
                         decoration: InputDecoration(
                           labelText: 'Username',
                           labelStyle: const TextStyle(color: Colors.black),
@@ -102,6 +119,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 15),
                       TextField(
+                        controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: 'Password',
@@ -127,16 +145,17 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 45), // Botón más pequeño
+                          minimumSize: const Size(double.infinity, 45),
                           backgroundColor: Colors.blue,
                         ),
-                        onPressed: () {
-                          // Navega al Dashboard cuando el usuario haga login
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Dashboard()),
-                          );
-                        },
+                        onPressed: _isLoginButtonEnabled
+                            ? () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const Dashboard()),
+                                );
+                              }
+                            : null, // Deshabilita el botón cuando está en null
                         child: const Text('Login'),
                       ),
                       const SizedBox(height: 15),
@@ -156,10 +175,10 @@ class LoginScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
