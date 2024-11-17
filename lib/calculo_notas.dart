@@ -40,7 +40,7 @@ class NotasScreenState extends State<NotasScreen> {
       _resultado = totalPorcentajes > 0 ? totalNotas / (totalPorcentajes / 100) : 0;
     });
 
-    if (_resultado >= 3) {
+    if (_resultado > 2.9) {
       _mostrarMensaje(context, '¡Felicidades!', 'Has aprobado el curso con una nota de ${_resultado.toStringAsFixed(2)}.');
     } else {
       _mostrarMensaje(context, 'Lo siento', 'No has logrado aprobar el curso. Tu nota final es ${_resultado.toStringAsFixed(2)}.');
