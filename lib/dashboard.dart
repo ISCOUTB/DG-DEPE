@@ -182,9 +182,9 @@ class DashboardState extends State<Dashboard> {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      _courseCard('Programación Orientada a Objetos', FontAwesomeIcons.laptopCode),
-                      _courseCard('Desarrollo de Software', FontAwesomeIcons.code),
-                      _courseCard('Ecuaciones Diferenciales', FontAwesomeIcons.buffer),
+                      _courseCard('Programación Orientada a Objetos', FontAwesomeIcons.laptopCode, context),
+                      _courseCard('Desarrollo de Software', FontAwesomeIcons.code, context),
+                      _courseCard('Ecuaciones Diferenciales', FontAwesomeIcons.buffer, context),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -274,25 +274,42 @@ class DashboardState extends State<Dashboard> {
   );
 }
 
-  Widget _courseCard(String title, IconData icon) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Container(
-        width: 140,
-        height: 140,
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 30, color: const Color(0xFFA3D9A5)),
-            const SizedBox(height: 10),
-            Text(title, style: const TextStyle(color: Colors.black, fontSize: 14), textAlign: TextAlign.center),
-          ],
+  Widget _courseCard(String courseName, IconData icon, BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CursosScreen(),
         ),
+      );
+    },
+    child: Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3F2FD), // Azul pastel
+        borderRadius: BorderRadius.circular(10),
       ),
-    );
-  }
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: const Color(0xFF64B5F6), size: 20),
+          const SizedBox(width: 10),
+          Text(
+            courseName,
+            style: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0D47A1),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   Widget _newsItem(String title, String subtitle) {
     return ListTile(
@@ -302,5 +319,3 @@ class DashboardState extends State<Dashboard> {
     );
   }
 }
-
-
