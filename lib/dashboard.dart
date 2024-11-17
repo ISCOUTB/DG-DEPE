@@ -17,6 +17,30 @@ class Dashboard extends StatefulWidget {
 }
 
 class DashboardState extends State<Dashboard> {
+final List<Curso> cursos = [
+    Curso(
+      nombre: 'Programación Orientada a Objetos',
+      descripcion: 'Este curso se enfoca en el paradigma de programación orientada a objetos.',
+      profesor: 'Juan Pérez',
+      correo: 'juan.perez@universidad.edu',
+      textoGuia: 'Apuntes de POO',
+    ),
+    Curso(
+      nombre: 'Desarrollo de Software',
+      descripcion: 'El curso aborda las metodologías y técnicas en el desarrollo de software.',
+      profesor: 'María López',
+      correo: 'maria.lopez@universidad.edu',
+      textoGuia: 'Manual de Desarrollo Ágil',
+    ),
+    Curso(
+      nombre: 'Ecuaciones Diferenciales',
+      descripcion: 'Este curso aborda temas avanzados de cálculo, necesario haber cursado los anteriores.',
+      profesor: 'Jose Perez Santander Priciliano',
+      correo: 'jos.priciliano@universidad.edu',
+      textoGuia: 'Cálculo de Thomas (14a edición)',
+    ),
+  ];
+
   bool _isSidebarExpanded = false;
   int cursosAprobados = 0;
 
@@ -275,41 +299,63 @@ class DashboardState extends State<Dashboard> {
 }
 
   Widget _courseCard(String courseName, IconData icon, BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CursosScreen(),
+    return GestureDetector(
+      onTap: () {
+        final curso = cursos.firstWhere((c) => c.nombre == courseName);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(curso.nombre),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Descripción: ${curso.descripcion}'),
+                  const SizedBox(height: 10),
+                  Text('Profesor: ${curso.profesor}'),
+                  const SizedBox(height: 10),
+                  Text('Correo: ${curso.correo}'),
+                  const SizedBox(height: 10),
+                  Text('Texto guía: ${curso.textoGuia}'),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cerrar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: const Color(0xFFE3F2FD), // Azul pastel
+          borderRadius: BorderRadius.circular(10),
         ),
-      );
-    },
-    child: Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE3F2FD), // Azul pastel
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: const Color(0xFF64B5F6), size: 20),
-          const SizedBox(width: 10),
-          Text(
-            courseName,
-            style: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF0D47A1),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: const Color(0xFF64B5F6), size: 20),
+            const SizedBox(width: 10),
+            Text(
+              courseName,
+              style: GoogleFonts.lato(
+                textStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF0D47A1),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _newsItem(String title, String subtitle) {
     return ListTile(
@@ -319,3 +365,5 @@ class DashboardState extends State<Dashboard> {
     );
   }
 }
+
+
